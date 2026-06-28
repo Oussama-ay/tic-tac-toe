@@ -8,9 +8,6 @@ const selectBox = document.querySelector(".game-start-menu"),
   gameEndMessage = document.querySelector("#game-end-message"),
   restartGameMessage = document.querySelector(".restart-game-message"),
   gameTiedMessage = document.querySelector("#game-tied-message"),
-  newGameVsPlayer = document.querySelector("#new-game-multiplayer"),
-  newGameVsPlayerAlert = document.querySelector("#new-game-vs-player-alert"),
-  backButton = document.querySelector(".back-button"),
   restartButton = document.querySelector(".restart-button"),
   quitButton = document.querySelector(".quit-button"),
   quitTiedButton = document.querySelector(".quit-tied-button"),
@@ -24,12 +21,10 @@ const selectBox = document.querySelector(".game-start-menu"),
   headerSmall = document.querySelector(".game-end-header-small"),
   turnButton = document.querySelector(".turn-button");
 newGameButton.addEventListener("click", startGame);
-newGameVsPlayer.addEventListener("click", startGameVsPlayer);
 quitButton.addEventListener("click", quitGame);
 quitTiedButton.addEventListener("click", quitGame);
 nextRoundButton.addEventListener("click", nextRound);
 nextRoundTiedButton.addEventListener("click", nextRound);
-backButton.addEventListener("click", handleBackButton);
 restartButton.addEventListener("click", restartGame);
 window.addEventListener("resize", centerMainContent);
 let playerXScore = 0;
@@ -97,7 +92,7 @@ selectPlayerX.addEventListener("click", function () {
   turnButton.innerHTML += " Turn";
   turnButton.style.color = "#a8bfc9";
   document.getElementById("player-one").innerHTML = "X (You)";
-  document.getElementById("player-two").innerHTML = "O (CPU)";
+  document.getElementById("player-two").innerHTML = "O (Computer)";
 });
 
 selectPlayerCircle.addEventListener("click", function () {
@@ -111,7 +106,7 @@ selectPlayerCircle.addEventListener("click", function () {
   );
 
   document.getElementById("player-two").innerHTML = "O (You)";
-  document.getElementById("player-one").innerHTML = "X (CPU)";
+  document.getElementById("player-one").innerHTML = "X (Computer)";
   aiPlayer(runAi);
 });
 
@@ -162,13 +157,7 @@ function startGame() {
   }
 }
 
-function startGameVsPlayer() {
-  newGameVsPlayerAlert.classList.add("show");
-}
 
-function handleBackButton() {
-  newGameVsPlayerAlert.classList.remove("show");
-}
 
 function quitGame() {
   location.reload();
@@ -226,22 +215,39 @@ function aiPlayer() {
       }
     }
 
-    let randomBox = emptyBoxes[Math.floor(Math.random() * emptyBoxes.length)];
     if (emptyBoxes.length > 0) {
+      let chosenBox;
+      if (typeof window.getBestMove === "function") {
+        let aiMark = players.classList.contains("player") ? 'X' : 'O';
+        let boardState = "";
+        for (let i = 0; i < cellElements.length; i++) {
+          if (cellElements[i].classList.contains("x")) {
+            boardState += "X";
+          } else if (cellElements[i].classList.contains("circle")) {
+            boardState += "O";
+          } else {
+            boardState += ".";
+          }
+        }
+        chosenBox = window.getBestMove(boardState, aiMark.charCodeAt(0));
+      } else {
+        chosenBox = emptyBoxes[Math.floor(Math.random() * emptyBoxes.length)];
+      }
+
       if (players.classList.contains("player")) {
         playerSign = "x-aiPlayer";
-        cellElements[randomBox].classList.add("x");
-        cellElements[randomBox].setAttribute("id", playerSign);
+        cellElements[chosenBox].classList.add("x");
+        cellElements[chosenBox].setAttribute("id", playerSign);
         players.classList.add("active");
       } else {
-        cellElements[randomBox].classList.add("circle");
-        cellElements[randomBox].setAttribute("id", playerSign);
+        cellElements[chosenBox].classList.add("circle");
+        cellElements[chosenBox].setAttribute("id", playerSign);
         players.classList.remove("active");
       }
       handleTurnButton();
       selectWinner();
+      cellElements[chosenBox].style.pointerEvents = "none";
     }
-    cellElements[randomBox].style.pointerEvents = "none";
     gameBoard.style.pointerEvents = "auto";
   }
 }

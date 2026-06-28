@@ -6,7 +6,6 @@
   --Light-yellow: hsl(39, 88%, 58%);
   --Light-blue: hsl(178, 60%, 48%);
   --Light-yellow-hover: hsl(39, 100%, 69%);
-  --Light-blue-hover: hsl(178, 75%, 65%);
   --On-hover-transition: 250ms ease-in-out;
   --Cell-size: 8.75rem;
   --X-mark: url(./images/icon-x.svg);
@@ -152,15 +151,6 @@ button {
   background: var(--Light-yellow-hover);
 }
 
-.button-blue {
-  background: var(--Light-blue);
-  box-shadow: 0 -0.5rem 0 0 hsl(178, 78%, 31%) inset;
-  border-radius: 1rem;
-}
-
-.button-blue:hover {
-  background: var(--Light-blue-hover);
-}
 
 .button-font {
   font-size: 1.25rem;
@@ -320,8 +310,7 @@ button {
 
 .game-end-message,
 .restart-game-message,
-.game-tied-message,
-.new-game-vs-player-alert {
+.game-tied-message {
   display: none;
   position: fixed;
   top: 0;
@@ -336,8 +325,7 @@ button {
 
 .game-end-container,
 .restart-game-container,
-.game-tied-container,
-.new-game-vs-player-alert-container {
+.game-tied-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -356,7 +344,6 @@ button {
 
 .game-end-container h3,
 .restart-game-container h3,
-.new-game-vs-player-alert h2,
 .game-tied-container h3 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -365,7 +352,6 @@ button {
 }
 
 .restart-game-container h3,
-.new-game-vs-player-alert h2,
 .game-tied-container h2 {
   margin: 1.5rem 0 2rem 0;
   color: var(--Silver);
@@ -392,7 +378,6 @@ button {
 }
 
 .cancel-restart-button,
-.back-button,
 .next-round-button,
 .next-round-tied-button,
 .confirm-restart-button,
@@ -409,8 +394,7 @@ button {
   border-radius: 0.6rem;
 }
 
-.cancel-restart-button,
-.back-button {
+.cancel-restart-button {
   width: 8.7rem;
   height: 3.25rem;
   margin-inline-end: 1rem;
@@ -420,7 +404,6 @@ button {
 }
 
 .cancel-restart-button:hover,
-.back-button:hover,
 .quit-button:hover {
   background: var(--Silver-hover);
 }
@@ -463,8 +446,7 @@ button {
 
 #game-end-message.show,
 #restart-game-message.show,
-#game-tied-message.show,
-#new-game-vs-player-alert.show {
+#game-tied-message.show {
   display: flex;
 }
 
