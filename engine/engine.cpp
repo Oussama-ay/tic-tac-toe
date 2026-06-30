@@ -27,51 +27,27 @@ bool is_board_full(string &board)
     return true;
 }
 
-int minimax(string &board, char curr, char ai_player, char opponent, int depth, int alpha, int beta)
+int negamax(string &board, char curr, int depth, int alpha, int beta)
 {
-    int score;
-    int best_score;
-
-    if (check_winner(board, opponent))
+    char prev = (curr == 'X') ? 'O' : 'X';
+    if (check_winner(board, prev))
         return depth - 10;
-    if (check_winner(board, ai_player))
-        return 10 - depth;
     if (is_board_full(board))
         return 0;
-    if (curr == ai_player)
+    int score;
+    int best_score = -10000;
+    for (int i = 0; i < 9; i++)
     {
-        best_score = -1000;
-        score = -1000;
-        for (int i = 0; i < 9; i++)
+        if (board[i] == ' ' || board[i] == '.')
         {
-            if (board[i] == '.' || board[i] == ' ')
-            {
-                board[i] = ai_player;
-                score = minimax(board, opponent, ai_player, opponent, depth + 1, alpha, beta);
-                board[i] = ' ';
-                best_score = max(best_score, score);
-                alpha = max(score, alpha);
-            }
+            char next = (curr == 'X') ? 'O' : 'X';
+            board[i] = curr;
+            score = -negamax(board, next, depth + 1, -beta, -alpha);
+            board[i] = '.';
+            best_score = max(best_score, score);
+            alpha = max(alpha, score);
             if (alpha >= beta)
                 return alpha;
-        }
-    }
-    else
-    {
-        best_score = 1000;
-        score = 1000;
-        for (int i = 0; i < 9; i++)
-        {
-            if (board[i] == '.' || board[i] == ' ')
-            {
-                board[i] = opponent;
-                score = minimax(board, ai_player, ai_player, opponent, depth + 1, alpha, beta);
-                board[i] = ' ';
-                best_score = min(best_score, score);
-                beta = min(score, beta);
-            }
-            if (alpha >= beta)
-                return beta;
         }
     }
     return best_score;
@@ -94,8 +70,8 @@ extern "C" {
             if (board[i] == '.' || board[i] == ' ')
             {
                 board[i] = ai_player;
-                score = minimax(board, opponent, ai_player, opponent, 0, -10000, 10000);
-                board[i] = ' ';
+                score = -negamax(board, opponent, 1, -10000, 10000);
+                board[i] = '.';
                 if (best_move < score)
                 {
                     best_move = score;
